@@ -105,3 +105,25 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+//sandbox
+uint64
+sys_interpose(void)
+{
+  int mask;
+  char path[MAXPATH];
+  struct proc *p = myproc();
+  
+  // Get arguments from user space - argint and argstr are void
+  argint(0, &mask);
+  argstr(1, path, MAXPATH);
+  
+  // Store the mask and allowed path in current process
+  p->mask = mask;
+  
+ // Copy the allowed path using safestrcpy
+  safestrcpy(p->allowed_path,path,MAXPATH);
+  return  0;
+}
+  
